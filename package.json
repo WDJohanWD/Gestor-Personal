@@ -1,0 +1,30 @@
+{
+  "name": "gestor-personal",
+  "version": "1.0.0",
+  "description": "Gestor personal (Gestor de contabilidad, tareas, y contraseñas) de escritorio",
+  "main": "main.js",
+  "scripts": {
+    "dev": "concurrently -k \"npm:start-react\" \"npm:start-electron\"",
+    "start-react": "cd renderer && npm run dev",
+    "start-electron": "wait-on http://localhost:5173 && electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WDJohanWD/Gestor-Personal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WDJohanWD/Gestor-Personal/issues"
+  },
+  "homepage": "https://github.com/WDJohanWD/Gestor-Personal#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^35.2.0",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "gestor-personal": "file:"
+  }
+}
