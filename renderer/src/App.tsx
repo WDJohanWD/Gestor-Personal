@@ -5,6 +5,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Login from "./sections/Login";
 import Register from "./sections/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import Finance from "./sections/finance/Finance";
+
 
 function Layout() {
   const { isAuthenticated, hasPasswordStored } = useAuth();
@@ -28,6 +30,7 @@ function Layout() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Navigate to="/login" />} />
               <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+              <Route path="/finance" element={<PrivateRoute><Finance /></PrivateRoute>} />
               <Route path="*" element={<Navigate to="/" />} />
             </>
           )}

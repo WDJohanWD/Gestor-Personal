@@ -11,7 +11,7 @@ function createWindow() {
     },
   });
 
-  win.loadURL('http://localhost:5173'); // Vite por defecto usa este puerto
+  win.loadURL('http://localhost:5173'); 
 }
 
 app.whenReady().then(() => {

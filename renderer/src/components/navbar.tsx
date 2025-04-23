@@ -6,7 +6,7 @@ export default function Navbar() {
     {
       name: "Gestor financiero",
       icon: HandCoins,
-      path: "/financial-manager",
+      path: "/finance",
     },
     {
       name: "Gestor de tareas",
