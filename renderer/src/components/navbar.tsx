@@ -16,7 +16,7 @@ export default function Navbar() {
     {
       name: "Gestor contraseñas",
       icon: RectangleEllipsis,
-      path: "/password-manager",
+      path: "/pass",
     },
     {
       name: "Settings",

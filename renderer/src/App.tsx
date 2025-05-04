@@ -6,6 +6,7 @@ import Login from "./sections/Login";
 import Register from "./sections/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Finance from "./sections/finance/Finance";
+import PasswordManager from "./sections/password/PasswordManager";
 
 
 function Layout() {
@@ -31,6 +32,7 @@ function Layout() {
               <Route path="/register" element={<Navigate to="/login" />} />
               <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/finance" element={<PrivateRoute><Finance /></PrivateRoute>} />
+              <Route path="/pass" element={<PrivateRoute><PasswordManager /></PrivateRoute>} />
               <Route path="*" element={<Navigate to="/" />} />
             </>
           )}

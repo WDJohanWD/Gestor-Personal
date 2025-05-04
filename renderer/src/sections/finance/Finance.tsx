@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { ArrowLeft, ArrowRight, ArrowUpRight, ArrowDownRight, Wallet, DollarSign, Plus, Calendar } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
@@ -14,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Types
+// Tipos auxiliares
 type TransactionType = "income" | "expense"
+
 type Transaction = {
     id: string
     date: Date
@@ -31,66 +30,17 @@ type CategoryTotal = {
     color: string
 }
 
-// Sample data
-const initialTransactions: Transaction[] = [
-    {
-        id: "1",
-        date: new Date(2023, 3, 5),
-        category: "Salary",
-        description: "Monthly salary",
-        amount: 3000,
-        type: "income",
-    },
-    {
-        id: "2",
-        date: new Date(2023, 3, 10),
-        category: "Rent",
-        description: "Monthly rent",
-        amount: 1200,
-        type: "expense",
-    },
-    {
-        id: "3",
-        date: new Date(2023, 3, 15),
-        category: "Groceries",
-        description: "Weekly groceries",
-        amount: 150,
-        type: "expense",
-    },
-    {
-        id: "4",
-        date: new Date(2023, 3, 20),
-        category: "Utilities",
-        description: "Electricity bill",
-        amount: 80,
-        type: "expense",
-    },
-    {
-        id: "5",
-        date: new Date(2023, 3, 25),
-        category: "Freelance",
-        description: "Website project",
-        amount: 500,
-        type: "income",
-    },
-]
-
-// Category colors
+const initialBalance = 2000 // Esto más adelante será configurable desde la BD o el usuario
 const categoryColors: Record<string, string> = {
-    Salary: "#4ade80",
-    Freelance: "#a3e635",
-    Rent: "#f87171",
-    Groceries: "#fb923c",
-    Utilities: "#60a5fa",
-    Entertainment: "#c084fc",
-    Transportation: "#94a3b8",
-    Food: "#fbbf24",
-    Shopping: "#e879f9",
-    Other: "#9ca3af",
+    Comida: "#f43f5e",
+    Transporte: "#3b82f6",
+    Entretenimiento: "#10b981",
+    Otros: "#a855f7",
+    // ...
 }
 
 export default function Finance() {
-    const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions)
+    const [transactions, setTransactions] = useState<Transaction[]>([])
     const [currentDate, setCurrentDate] = useState(new Date())
     const [newTransaction, setNewTransaction] = useState<Partial<Transaction>>({
         type: "expense",
@@ -101,21 +51,23 @@ export default function Finance() {
     })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    // Filter transactions by current month and year
-    const filteredTransactions = transactions.filter((transaction) => {
-        return (
-            transaction.date.getMonth() === currentDate.getMonth() &&
-            transaction.date.getFullYear() === currentDate.getFullYear()
-        )
-    })
+    // Filtro mensual
+    const filteredTransactions = transactions.filter((t) =>
+        t.date.getMonth() === currentDate.getMonth() &&
+        t.date.getFullYear() === currentDate.getFullYear()
+    )
 
-    // Calculate summary data
-    const initialBalance = 2000 // Example initial balance
-    const totalIncome = filteredTransactions.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0)
+    // Resúmenes
+    const totalIncome = filteredTransactions
+        .filter((t) => t.type === "income")
+        .reduce((sum, t) => sum + t.amount, 0)
 
-    const totalExpenses = filteredTransactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0)
+    const totalExpenses = filteredTransactions
+        .filter((t) => t.type === "expense")
+        .reduce((sum, t) => sum + t.amount, 0)
 
     const currentBalance = initialBalance + totalIncome - totalExpenses
+
 
     // Calculate expense categories for chart
     const expensesByCategory = filteredTransactions
@@ -128,67 +80,70 @@ export default function Finance() {
     const chartData: CategoryTotal[] = Object.entries(expensesByCategory).map(([name, value]) => ({
         name,
         value,
-        color: categoryColors[name] || "#9ca3af",
+        color: categoryColors[name] || "#9ca3af", // Gris si no hay color definido
     }))
+
 
     // Handle month navigation
     const prevMonth = () => {
         setCurrentDate((prev) => {
-            const newDate = new Date(prev)
-            newDate.setMonth(newDate.getMonth() - 1)
-            return newDate
+          const newDate = new Date(prev)
+          newDate.setMonth(newDate.getMonth() - 1)
+          return newDate
         })
-    }
-
-    const nextMonth = () => {
+      }
+      
+      const nextMonth = () => {
         setCurrentDate((prev) => {
-            const newDate = new Date(prev)
-            newDate.setMonth(newDate.getMonth() + 1)
-            return newDate
+          const newDate = new Date(prev)
+          newDate.setMonth(newDate.getMonth() + 1)
+          return newDate
         })
-    }
-
-    // Handle adding new transaction
+      }
+      
     const handleAddTransaction = () => {
         if (!newTransaction.category || !newTransaction.description || !newTransaction.amount) {
-            return
+          return
         }
-
+      
         const transaction: Transaction = {
-            id: Date.now().toString(),
-            date: newTransaction.date || new Date(),
-            category: newTransaction.category,
-            description: newTransaction.description,
-            amount: Number(newTransaction.amount),
-            type: newTransaction.type as TransactionType,
+          id: Date.now().toString(),
+          date: newTransaction.date || new Date(),
+          category: newTransaction.category,
+          description: newTransaction.description,
+          amount: Number(newTransaction.amount),
+          type: newTransaction.type as TransactionType,
         }
-
+      
         setTransactions((prev) => [...prev, transaction])
         setNewTransaction({
-            type: "expense",
-            date: new Date(),
-            category: "",
-            description: "",
-            amount: 0,
+          type: "expense",
+          date: new Date(),
+          category: "",
+          description: "",
+          amount: 0,
         })
         setIsDialogOpen(false)
-    }
+      }
+      
 
     // Custom tooltip for the chart
     const CustomTooltip = ({ active, payload }: { active: boolean; payload: { name: string; value: number }[] }) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="bg-background border rounded p-2 shadow-sm">
-                    <p className="font-medium">{payload[0].name}</p>
-                    <p className="text-sm">${payload[0].value.toFixed(2)}</p>
-                    <p className="text-xs text-muted-foreground">
-                        {((payload[0].value / totalExpenses) * 100).toFixed(1)}% of expenses
-                    </p>
-                </div>
-            )
+        if (active && payload?.length) {
+          const { name, value } = payload[0]
+          return (
+            <div className="bg-background border rounded p-2 shadow-sm">
+              <p className="font-medium">{name}</p>
+              <p className="text-sm">${value.toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">
+                {((value / totalExpenses) * 100).toFixed(1)}% del total de gastos
+              </p>
+            </div>
+          )
         }
         return null
-    }
+      }
+      
 
     return (
         <div className="w-full max-w-7xl mx-auto p-4 space-y-6">
@@ -296,7 +251,7 @@ export default function Finance() {
                                                 <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="Rent">Rent</SelectItem>
+                                                <SelectItem value="Rent">Renta</SelectItem>
                                                 <SelectItem value="Groceries">Groceries</SelectItem>
                                                 <SelectItem value="Utilities">Utilities</SelectItem>
                                                 <SelectItem value="Entertainment">Entertainment</SelectItem>

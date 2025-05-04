@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { Eye, EyeOff, LogIn } from "lucide-react"
@@ -22,7 +22,9 @@ export default function Login() {
     if (success) navigate("/dashboard")
     else setError("Contraseña incorrecta")
   }
-
+  useEffect(() => {
+    console.log("Password: Johan123")
+  })
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 p-4">
       <Card className="w-full max-w-md shadow-lg">

@@ -1,6 +1,7 @@
 // main.js
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+require('./main/ipcHandlers'); 
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,6 +16,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  require('./main/ipcHandlers'); 
   createWindow();
 
   app.on('activate', () => {
@@ -24,4 +26,5 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+  
 });
