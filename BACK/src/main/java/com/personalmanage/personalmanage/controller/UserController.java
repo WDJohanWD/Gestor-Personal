@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity <?> login (loginDto loginDto) {
+    public ResponseEntity <?> login (@RequestBody loginDto loginDto) {
         if (userService.verifyUser(loginDto.getEmail(), loginDto.getPassword())){
             return ResponseEntity.ok("Login successful");
         };
