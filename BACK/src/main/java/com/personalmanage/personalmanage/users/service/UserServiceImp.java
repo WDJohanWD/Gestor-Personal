@@ -1,43 +1,46 @@
 package com.personalmanage.personalmanage.users.service;
 
-import java.util.List;
+import com.personalmanage.personalmanage.users.domain.User;
+import com.personalmanage.personalmanage.users.domain.dto.UserDto;
+import com.personalmanage.personalmanage.users.repository.UserRepository;
+import com.personalmanage.personalmanage.config.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.personalmanage.personalmanage.users.domain.User;
-import com.personalmanage.personalmanage.users.domain.dto.UserDto;
-import com.personalmanage.personalmanage.users.repository.UserRepository;
-
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
+
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtService jwtService;
 
-    @Override
-    public User createUser(UserDto userDto) {
+
+
+    public User register(UserDto dto) {
+        if (userRepository.findByEmail(dto.getEmail()) != null) {
+            throw new RuntimeException("El correo ya está registrado");
+        }
+
         User user = new User();
-        user.setName(userDto.getName());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
         return userRepository.save(user);
     }
 
-    @Override
-    public Boolean verifyUser(String email, String password) {
+    public String login(String email, String password) {
         User user = userRepository.findByEmail(email);
-        if (user != null) {
-            return passwordEncoder.matches(password, user.getPassword());
-        }
-        return false;
-    }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Credenciales inválidas");
+        }
+
+        return jwtService.generateToken(user.getEmail());
     }
 }
