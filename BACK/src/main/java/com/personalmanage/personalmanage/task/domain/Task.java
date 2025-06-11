@@ -9,10 +9,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +28,6 @@ public class Task {
     private String title;
     private String description;
     private LocalDate dueDate;
-    private boolean completed;
+    private boolean completed = false;
 }
 
