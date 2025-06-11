@@ -8,5 +8,6 @@ public interface TaskService {
     Task saveTask(TaskDTO task);
     Boolean deleteTask(Task task);
     List<Task> taskByUser(Long id);
-    Task updatedTask(Task task);
+    Task updatedTask(Long id, Task task);
+    Boolean completeTask(Long id);
 }

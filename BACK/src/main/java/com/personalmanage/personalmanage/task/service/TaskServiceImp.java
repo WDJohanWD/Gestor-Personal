@@ -51,11 +51,27 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public Task updatedTask(Task task) {
-        if (taskRepository.findById(task.getId()).isPresent()) {
-            return taskRepository.save(task);
+    public Task updatedTask(Long id, Task task) {
+        Task task1 = taskRepository.findById(id).orElse(null);
+        if (task1 == null) {
+            throw new RuntimeException("Task with id " + id + " not found.");
         }
-        return null;
+        task1.setTitle(task.getTitle());
+        task1.setDescription(task.getDescription());
+        task1.setDueDate(task.getDueDate());
+        task1.setCompleted(task.isCompleted());
+        return taskRepository.save(task1);
+    }
+
+    @Override
+    public Boolean completeTask(Long id) {
+        Task task = taskRepository.findById(id).orElse(null);
+        if (task == null) {
+            throw new RuntimeException("Task with id " + id + " not found.");
+        }
+        task.setCompleted(true);
+        taskRepository.save(task);
+        return true;
     }
 
 }
