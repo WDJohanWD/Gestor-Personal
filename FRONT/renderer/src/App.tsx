@@ -1,41 +1,16 @@
-import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
-import Navbar from "./components/navbar";
-import { Home } from "./sections/Home";
-import PrivateRoute from "./components/PrivateRoute";
-import Login from "./sections/Login";
-import Register from "./sections/Register";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import Finance from "./sections/finance/Finance";
-import PasswordManager from "./sections/password/PasswordManager";
+import { lazy } from "react";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 
+const Task = lazy (() => import("./sections/Task"));
 function Layout() {
-  const { isAuthenticated, hasPasswordStored } = useAuth();
-  const location = useLocation();
 
-  const hideNavbarRoutes = ["/login", "/register"];
-  const shouldShowNavbar = isAuthenticated && !hideNavbarRoutes.includes(location.pathname);
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {shouldShowNavbar && <Navbar />}
       <main className="flex-1 overflow-y-auto p-6 bg-background-main ">
         <Routes>
-          {!hasPasswordStored() ? (
-            <>
-              <Route path="/register" element={<Register />} />
-              <Route path="*" element={<Navigate to="/register" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Navigate to="/login" />} />
-              <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-              <Route path="/finance" element={<PrivateRoute><Finance /></PrivateRoute>} />
-              <Route path="/pass" element={<PrivateRoute><PasswordManager /></PrivateRoute>} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          )}
+          <Route path="/" element={<Task />} />
         </Routes>
       </main>
     </div>
@@ -44,11 +19,9 @@ function Layout() {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Layout />
-      </BrowserRouter>
-    </AuthProvider>
+    <HashRouter>
+      <Layout />
+    </HashRouter>
   );
 }
 

@@ -36,8 +36,9 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public Boolean deleteTask(Task task) {
-        if (taskRepository.findById(task.getId()).isPresent()) {
+    public Boolean deleteTask(Long id) {
+        if (taskRepository.findById(id).isPresent()) {
+            Task task = taskRepository.findById(id).get();
             taskRepository.delete(task);
             return true;
         }
