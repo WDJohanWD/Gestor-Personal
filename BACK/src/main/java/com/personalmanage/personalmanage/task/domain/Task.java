@@ -28,6 +28,7 @@ public class Task {
     private String title;
     private String description;
     private LocalDate dueDate;
+    private LocalDate createdAt = LocalDate.now();
     private boolean completed = false;
 }
 

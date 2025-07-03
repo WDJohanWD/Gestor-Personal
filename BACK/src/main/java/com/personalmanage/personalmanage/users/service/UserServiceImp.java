@@ -41,6 +41,6 @@ public class UserServiceImp implements UserService {
             throw new RuntimeException("Credenciales inválidas");
         }
 
-        return jwtService.generateToken(user.getEmail());
+        return jwtService.generateToken(user.getEmail(), user.getId());
     }
 }
