@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useAuth } from "@/contexts/AuthContext"
 import { Task, TaskFormData } from "./types"
 import { DueDatePicker } from "./DueDatePicker"
-
+import { useToast } from "@/contexts/ToastContext"
 interface TaskDialogProps {
     isOpen: boolean
     onClose: () => void
@@ -19,6 +19,7 @@ interface TaskDialogProps {
 
 export function TaskDialog({ isOpen, onClose, editingTask, onTaskCreated, onTaskUpdated }: TaskDialogProps) {
     const { token, user } = useAuth()
+    const { showToast } = useToast()
     const form = useForm<TaskFormData>({
         defaultValues: {
             title: "",
@@ -44,7 +45,7 @@ export function TaskDialog({ isOpen, onClose, editingTask, onTaskCreated, onTask
             }
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/task`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/task/create`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -57,6 +58,7 @@ export function TaskDialog({ isOpen, onClose, editingTask, onTaskCreated, onTask
                 }
                 const newTask = await response.json()
                 onTaskCreated(newTask)
+                showToast({ title: "Tarea creada", description: "La tarea ha sido creada correctamente" })
             } catch (error) {
                 console.error('Error creating task:', error)
             }

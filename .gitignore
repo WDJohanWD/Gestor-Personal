@@ -1,3 +1,5 @@
 BACK/data/personalManage.mv.db
 FRONT/.env
 FRONT/renderer/.env
+BACK/data/personalManage.trace.db
+start.bat

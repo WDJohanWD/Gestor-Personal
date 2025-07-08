@@ -1,7 +1,8 @@
 import { lazy } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ToastProvider } from "@/contexts/ToastContext"
 
 const Task = lazy(() => import("./sections/tasks/Task"));
 const AuthPage = lazy(() => import("./sections/auth/Auth-page"));
@@ -30,7 +31,9 @@ function App() {
   return (
     <HashRouter>
       <AuthProvider>
-        <Layout />
+        <ToastProvider>
+          <Layout />
+        </ToastProvider>
       </AuthProvider>
     </HashRouter>
   );

@@ -8,6 +8,12 @@ interface User {
   userId: number;
 }
 
+interface JwtPayload {
+  sub: string;
+  name: string;
+  userId: number;
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -26,8 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (token) {
       try {
-        const decodedToken = jwtDecode<User>(token);
-        setUser(decodedToken);
+        const decodedToken = jwtDecode<JwtPayload>(token);
+        setUser({
+          email: decodedToken.sub,
+          name: decodedToken.name,
+          userId: decodedToken.userId,
+        });
       } catch (error) {
         console.error('Error decoding token:', error);
         logout();
